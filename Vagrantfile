@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://atlas.hashicorp.com/search.
   #config.vm.box = "hashicorp/precise64"
 
-  config.vm.box = "rboyer/ubuntu-trusty64-libvirt"
+  config.vm.box = "ubuntu-libvirt"
   config.vm.provider :lxc do |lxc, override|
     override.vm.box = "fgrehm/precise64-lxc"
   end
