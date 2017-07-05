@@ -14,10 +14,7 @@ Vagrant.configure("2") do |config|
   # boxes at https://atlas.hashicorp.com/search.
   #config.vm.box = "hashicorp/precise64"
 
-  config.vm.box = "ubuntu-libvirt"
-  config.vm.provider :lxc do |lxc, override|
-    override.vm.box = "fgrehm/precise64-lxc"
-  end
+  config.vm.box = "fedora/25-cloud-base"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -74,22 +71,15 @@ Vagrant.configure("2") do |config|
   # by that Vagrant method, so we install and invoke Ansible manually.
 
   config.vm.provision "shell", inline: <<-SHELL
-    cat > /etc/os-release <<'EOF'
-NAME="Ubuntu"
-VERSION="12.04 LTS, Precise Pangolin"
-ID=ubuntu
-ID_LIKE=debian
-PRETTY_NAME="Ubuntu precise (12.04 LTS)"
-VERSION_ID="12.04"
-EOF
     if ! which ansible-playbook
     then
-      sudo apt-get update
-      sudo apt-get install -y python-dev python-pip libffi-dev
+      sudo dnf update -y
+      sudo dnf install -y redhat-rpm-config
+      sudo dnf install -y python-devel python-pip libffi-devel openssl-devel
       sudo pip install -U pip
       sudo pip install ansible
     fi
-    sudo ansible-playbook -i "localhost," -c local /vagrant/develop/playbook.yml
+    sudo ansible-playbook -i "localhost," -c local /vagrant/develop/playbook-fedora.yml
   SHELL
 
 end
